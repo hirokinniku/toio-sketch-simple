@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/konva/8.3.2/konva.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js"></script>
+  </head>
+  <body>
+    <div id="canvas"></div>
+    <script>
+      const socket = io()
+
+      let width = window.innerWidth
+      let height = window.innerHeight
+      let stage = new Konva.Stage({
+        container: 'canvas',
+        width: width,
+        height: height,
+      })
+      let layer = new Konva.Layer()
+      stage.add(layer)
+      let isPaint = false
+      let mode = 'brush'
+      let lastLine
+
+      line = new Konva.Line({
+        stroke: '#df4b26',
+        strokeWidth: 5,
+        lineCap: 'round',
+        points: [],
+      })
+      layer.add(line)
+
+      socket.on('pos', (data) => {
+        console.log(data)
+        let cubes = data.cubes
+        let cube = cubes[0]
+        let x = cube.x
+        let y = cube.y
+
+        let newPoints = line.points().concat([x, y])
+        line.points(newPoints)
+      })
+    </script>
+  </body>
+</html>
